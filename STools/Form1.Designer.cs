@@ -37,6 +37,7 @@
             this.label1 = new System.Windows.Forms.Label();
             this.loadProgress = new System.Windows.Forms.ProgressBar();
             this.lbMessage = new System.Windows.Forms.Label();
+            this.button1 = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // label1
@@ -63,11 +64,22 @@
             this.lbMessage.TabIndex = 2;
             this.lbMessage.Text = "label2";
             // 
+            // button1
+            // 
+            this.button1.Location = new System.Drawing.Point(411, 8);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(75, 23);
+            this.button1.TabIndex = 3;
+            this.button1.Text = "button1";
+            this.button1.UseVisualStyleBackColor = true;
+            this.button1.Click += new System.EventHandler(this.button1_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 18F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(530, 135);
+            this.Controls.Add(this.button1);
             this.Controls.Add(this.lbMessage);
             this.Controls.Add(this.loadProgress);
             this.Controls.Add(this.label1);
@@ -86,6 +98,7 @@
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.ProgressBar loadProgress;
         private System.Windows.Forms.Label lbMessage;
+        private System.Windows.Forms.Button button1;
     }
 }
 

@@ -61,6 +61,11 @@ namespace STools.Core
     {
         private SToolSettings _settings = new SToolSettings();
         private Dictionary<string, BaseObject> _applicationDictionary = new Dictionary<string, BaseObject>();
+
+        public Dictionary<string, BaseObject> Applications
+        {
+            get { return _applicationDictionary; }
+        }
         
         public STool(SToolSettings setting)
         {
@@ -96,6 +101,7 @@ namespace STools.Core
                 try
                 {
                     Assembly assem = Assembly.LoadFile(_settings.StartupPath + @"\Applications\" + app.FileName);
+
                     if (!_applicationDictionary.ContainsKey(app.Name))
                     {
                         BaseObject appObject = (BaseObject)assem.CreateInstance(app.ClassName);

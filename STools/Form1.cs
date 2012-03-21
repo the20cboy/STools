@@ -10,6 +10,7 @@ using System.Threading;
 using log4net;
 
 using STools.Core;
+using STools.CommonLibrary;
 
 namespace STools
 {
@@ -41,6 +42,19 @@ namespace STools
                 MessageBox.Show("S-Tools Initialize Failed\nPlease Check System Log Files.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 this.Close();
             }
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            AppDomain domain = AppDomain.CurrentDomain;
+
+            BaseObject aaa = _sTools.Applications["AAA"];
+            BaseObject bbb = _sTools.Applications["BBB"];
+
+            BaseObject ccc = bbb;
+       
+
+            Type t = Type.GetType("STools.CommonLibrary.BaseObject");
         }
     }
 }
