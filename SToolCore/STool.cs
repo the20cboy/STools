@@ -66,7 +66,9 @@ namespace STools.Core
     
     public class STool : ISTool, IDisposable
     {
-        IRemoteServer _server = null;
+        TcpChannel    _serverChannel = null;
+        TcpChannel    _clientChannel = null;
+        IRemoteServer _serverInterface = null;
 
         private SToolSettings _settings = new SToolSettings();
         private Dictionary<string, BaseObject> _applicationDictionary = new Dictionary<string, BaseObject>();
@@ -130,7 +132,8 @@ namespace STools.Core
             if (_settings.ToolTypes == ToolTypes.Server)
             {
                 /// Remote Server Initialize.
-                ChannelServices.RegisterChannel(CreateTCPChannel(TCPChannelType.Server, 1234));
+                _serverChannel = CreateTCPChannel(TCPChannelType.Server, 1234);
+                ChannelServices.RegisterChannel(_serverChannel, true);
                 /*
                 RemotingConfiguration.RegisterWellKnownServiceType(
                     typeof(RemoteServices),
@@ -141,15 +144,16 @@ namespace STools.Core
             }
             else
             {
-                ChannelServices.RegisterChannel(CreateTCPChannel(TCPChannelType.Client, 0));
+                _clientChannel = CreateTCPChannel(TCPChannelType.Client, 0);
+                ChannelServices.RegisterChannel(_clientChannel, true);
                 RemoteClient.Instance.SetNames("CLIENT1");
 
                 try
                 {
-                    _server = (IRemoteServer)Activator.GetObject(typeof(IRemoteServer),
+                    _serverInterface = (IRemoteServer)Activator.GetObject(typeof(IRemoteServer),
                           "tcp://localhost:1234/IRemoteControl.soap");
 
-                    if (_server.Connect(RemoteClient.Instance))
+                    if (_serverInterface.Connect(RemoteClient.Instance))
                     {
                         Console.WriteLine("Client Connected");
                     }
@@ -251,13 +255,13 @@ namespace STools.Core
 
             if(_settings.ToolTypes == ToolTypes.Client)
             {
-                SystemLog(SystemLogLevel.Info, string.Format("SERVER CLIENT: {0}", _server.GetClientNameList().Count));
-                List<string> _list = _server.GetClientNameList();
+                SystemLog(SystemLogLevel.Info, string.Format("SERVER CLIENT: {0}", _serverInterface.GetClientNameList().Count));
+                List<string> _list = _serverInterface.GetClientNameList();
                 foreach (string name in _list)
                 {
                     log += name + "\n";
                     IRemoteClient client = null;
-                    if (_server.GetClient(name, out client))
+                    if (_serverInterface.GetClient(name, out client))
                     {
                         List<string> objects = client.GetObjectList();
                         foreach (string objectName in objects)
@@ -419,6 +423,16 @@ namespace STools.Core
                 foreach (BaseObject obj in _applicationDictionary.Values)
                 {
                     obj.Dispose();
+                }
+
+                if (_settings.ToolTypes == ToolTypes.Server)
+                {
+                    ChannelServices.UnregisterChannel(_serverChannel);
+                }
+                else
+                {
+                    _serverInterface.Disconnect("CLIENT1");
+                    ChannelServices.UnregisterChannel(_clientChannel);
                 }
             }
         }
