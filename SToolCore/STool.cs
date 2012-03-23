@@ -11,6 +11,13 @@ using System.Xml.Serialization;
 using SToolCommonLibrary;
 using STools.Core;
 
+using System.Runtime.Remoting.Channels.Http;
+using System.Runtime.Remoting.Channels;
+using System.Runtime.Remoting;
+using System.Collections;
+using System.Runtime.Serialization.Formatters;
+using System.Runtime.Remoting.Channels.Tcp;
+
 namespace STools.Core
 {
     public enum ToolTypes
@@ -59,6 +66,8 @@ namespace STools.Core
     
     public class STool : ISTool, IDisposable
     {
+        IRemoteServer _server = null;
+
         private SToolSettings _settings = new SToolSettings();
         private Dictionary<string, BaseObject> _applicationDictionary = new Dictionary<string, BaseObject>();
 
@@ -84,14 +93,6 @@ namespace STools.Core
 
         public bool Initialize()
         {
-            if (_settings.ToolTypes == ToolTypes.Server)
-            {
-
-            }
-            else
-            {
-
-            }
 
             /// Core Load
             ApplicationsList appList = (ApplicationsList)XmlControl.DeSerialize(_settings.StartupPath + @"/Config/App.Info", typeof(ApplicationsList));
@@ -124,17 +125,274 @@ namespace STools.Core
                 }
             }
 
+
+
+            if (_settings.ToolTypes == ToolTypes.Server)
+            {
+                /// Remote Server Initialize.
+                ChannelServices.RegisterChannel(CreateTCPChannel(TCPChannelType.Server, 1234));
+                /*
+                RemotingConfiguration.RegisterWellKnownServiceType(
+                    typeof(RemoteServices),
+                    "IRemoteControl.soap",
+                    WellKnownObjectMode.Singleton);
+                */
+                RemotingServices.Marshal(RemoteServices.Instance, "IRemoteControl.soap");
+            }
+            else
+            {
+                ChannelServices.RegisterChannel(CreateTCPChannel(TCPChannelType.Client, 0));
+                RemoteClient.Instance.SetNames("CLIENT1");
+
+                try
+                {
+                    _server = (IRemoteServer)Activator.GetObject(typeof(IRemoteServer),
+                          "tcp://localhost:1234/IRemoteControl.soap");
+
+                    if (_server.Connect(RemoteClient.Instance))
+                    {
+                        Console.WriteLine("Client Connected");
+                    }
+                }
+                catch (System.Exception ex)
+                {
+
+                }
+            }
+            
             return true;
         }
 
         public bool Load()
         {
+
             /// Create
+            if (!CreateApplicationObject())
+            {
+                SystemLog(SystemLogLevel.Error, "Create Application Object Failed. Exit Load.");
+                return false;
+            }
+
             /// Define Services.
+            if (!DefineApplicationService())
+            {
+                SystemLog(SystemLogLevel.Error, "Define Application Service Failed. Exit Load.");
+                return false;
+            }
             /// Define Channels
+            if (!DefineApplicationChannels())
+            {
+                SystemLog(SystemLogLevel.Error, "Define Application Channel Failed. Exit Load.");
+                return false;
+            }
+
             /// Define Alarms
+            if (!DefineApplicationAlarms())
+            {
+                SystemLog(SystemLogLevel.Error, "Define Application Alarms Failed. Exit Load.");
+                return false;
+            }
+            
             /// Initialize Objects
+            if (!InitializeApplicationObjects())
+            {
+                SystemLog(SystemLogLevel.Error, "Initialize Application Objects Failed. Exit Load.");
+                return false;
+            }
+
+
             /// Thread Run
+
+            return true;
+        }
+
+        private enum TCPChannelType 
+        {
+            Server,
+            Client
+        };
+
+        private TcpChannel CreateTCPChannel(TCPChannelType type, int port)
+        {
+            BinaryClientFormatterSinkProvider clientProvider = null;
+            BinaryServerFormatterSinkProvider serverProvider = null;
+            IDictionary props = null;
+
+            if (type == TCPChannelType.Server)
+            {
+                serverProvider = new BinaryServerFormatterSinkProvider();
+                serverProvider.TypeFilterLevel = TypeFilterLevel.Full;
+
+                props = new Hashtable();
+                props["port"] = port;
+                props["typeFilterLevel"] = TypeFilterLevel.Full;
+            }
+            else
+            {
+                clientProvider = new BinaryClientFormatterSinkProvider();
+                serverProvider = new BinaryServerFormatterSinkProvider();
+                serverProvider.TypeFilterLevel = System.Runtime.Serialization.Formatters.TypeFilterLevel.Full;
+
+                props = new Hashtable();
+                props["port"] = port;
+                string s = System.Guid.NewGuid().ToString();
+                props["name"] = s;
+                props["typeFilterLevel"] = TypeFilterLevel.Full;
+            }
+
+            
+            
+            return new TcpChannel(props, clientProvider, serverProvider);
+        }
+
+        public void PintClientList()
+        {
+            string log = string.Empty;
+
+            if(_settings.ToolTypes == ToolTypes.Client)
+            {
+                SystemLog(SystemLogLevel.Info, string.Format("SERVER CLIENT: {0}", _server.GetClientNameList().Count));
+                List<string> _list = _server.GetClientNameList();
+                foreach (string name in _list)
+                {
+                    log += name + "\n";
+                    IRemoteClient client = null;
+                    if (_server.GetClient(name, out client))
+                    {
+                        List<string> objects = client.GetObjectList();
+                        foreach (string objectName in objects)
+                        {
+                            log += objectName + "\n";
+                        }
+                    }
+                }
+
+                SystemLog(SystemLogLevel.Info, log);
+            }
+            else
+            {
+                SystemLog(SystemLogLevel.Info, string.Format("SERVER CLIENT: {0}", RemoteServices.Instance.GetClientNameList().Count));
+
+                List<string> _list = RemoteServices.Instance.GetClientNameList();
+                foreach (string name in _list)
+                {
+                    log += name + "\n";
+                    IRemoteClient client = null;
+                    if (RemoteServices.Instance.GetClient(name, out client))
+                    {
+                        List<string> objects = client.GetObjectList();
+                        foreach (string objectName in objects)
+                        {
+                            log += objectName + "\n";
+                        }
+                    }
+                }
+                SystemLog(SystemLogLevel.Info, log);
+            }
+        }
+
+        public bool CreateApplicationObject()
+        {
+            foreach (BaseObject app in _applicationDictionary.Values)
+            {
+                if (!app.CreateObject())
+                {
+                    SystemLog(SystemLogLevel.Error, string.Format("Application: {0}, Create Failed.", app.Name));
+                    return false;
+                }
+                else
+                {
+                    SystemLog(SystemLogLevel.Info, string.Format("Create Application Object Name: {0}", app.Name));
+                }
+            }
+
+            SystemLog(SystemLogLevel.Info, 
+                      string.Format("Create Application Object Completed.\nTotal Object Count: {0}", 
+                      _applicationDictionary.Count));
+
+            return true;
+        }
+
+        public bool DefineApplicationService()
+        {
+            foreach (BaseObject app in _applicationDictionary.Values)
+            {
+                if (!app.DefineServices())
+                {
+                    SystemLog(SystemLogLevel.Error, string.Format("Application: {0}, Define Service Failed.", app.Name));
+                    return false;
+                }
+                else
+                {
+                    SystemLog(SystemLogLevel.Info, string.Format("Define Service. Object Name: {0}", app.Name));
+                }
+            }
+
+            SystemLog(SystemLogLevel.Info,
+                      string.Format("Define Application Service Completed.\n"));
+
+            return true;
+        }
+
+        public bool DefineApplicationChannels()
+        {
+            foreach (BaseObject app in _applicationDictionary.Values)
+            {
+                if (!app.DefineChannels())
+                {
+                    SystemLog(SystemLogLevel.Error, string.Format("Application: {0}, Define Channels Failed.", app.Name));
+                    return false;
+                }
+                else
+                {
+                    SystemLog(SystemLogLevel.Info, string.Format("Define Channels. Object Name: {0}", app.Name));
+                }
+            }
+
+            SystemLog(SystemLogLevel.Info,
+                      string.Format("Define Application Channels Completed.\n"));
+
+            return true;
+        }
+
+        public bool DefineApplicationAlarms()
+        {
+            foreach (BaseObject app in _applicationDictionary.Values)
+            {
+                if (!app.DefineAlarms())
+                {
+                    SystemLog(SystemLogLevel.Error, string.Format("Application: {0}, Define Channels Failed.", app.Name));
+                    return false;
+                }
+                else
+                {
+                    SystemLog(SystemLogLevel.Info, string.Format("Define Channels. Object Name: {0}", app.Name));
+                }
+            }
+
+            SystemLog(SystemLogLevel.Info,
+                      string.Format("Define Application Channels Completed.\n"));
+
+            return true;
+        }
+
+        public bool InitializeApplicationObjects()
+        {
+            foreach (BaseObject app in _applicationDictionary.Values)
+            {
+                if (!app.InitializeObject())
+                {
+                    SystemLog(SystemLogLevel.Error, string.Format("Application: {0}, Define Channels Failed.", app.Name));
+                    return false;
+                }
+                else
+                {
+                    SystemLog(SystemLogLevel.Info, string.Format("Define Channels. Object Name: {0}", app.Name));
+                }
+            }
+
+            SystemLog(SystemLogLevel.Info,
+                      string.Format("Define Application Channels Completed.\n"));
 
             return true;
         }

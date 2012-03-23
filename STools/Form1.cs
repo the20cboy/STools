@@ -21,8 +21,16 @@ namespace STools
 
         public Form1()
         {
+            
+
             SToolSettings settings = new SToolSettings();
             settings.StartupPath = Application.StartupPath;
+
+            if (System.Configuration.ConfigurationSettings.AppSettings["ApplicationType"].Equals("Server"))
+                settings.ToolTypes = ToolTypes.Server;
+            else
+                settings.ToolTypes = ToolTypes.Client;
+
             settings.Logger = _logger;
 
             _sTools = new STool(settings);
@@ -42,19 +50,18 @@ namespace STools
                 MessageBox.Show("S-Tools Initialize Failed\nPlease Check System Log Files.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 this.Close();
             }
+
+            if (!_sTools.Load()) 
+            {
+                MessageBox.Show("S-Tools Load Application Object Failed\nExit Program.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                this.Close();
+            }
         }
 
         private void button1_Click(object sender, EventArgs e)
         {
-            AppDomain domain = AppDomain.CurrentDomain;
+            _sTools.PintClientList();
 
-            BaseObject aaa = _sTools.Applications["AAA"];
-            BaseObject bbb = _sTools.Applications["BBB"];
-
-            BaseObject ccc = bbb;
-       
-
-            Type t = Type.GetType("STools.CommonLibrary.BaseObject");
         }
     }
 }

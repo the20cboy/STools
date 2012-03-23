@@ -3,12 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Xml.Serialization;
+using SToolCommonLibrary;
 
 namespace STools.Core
 {
-    public class ObjectManager
-    {
-    }
 
     [XmlRoot("Applications")]
     public class ApplicationsList
@@ -50,11 +48,5 @@ namespace STools.Core
             get { return _fileName; }
             set { _fileName = value; }
         }
-    }
-
-
-    public interface IOjbectControlInterface
-    {
-
     }
 }

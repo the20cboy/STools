@@ -6,18 +6,18 @@ using System.Reflection;
 
 namespace STools.CommonLibrary
 {
-
     public enum ServiceResult
     {
         Available = 0,
-        Failed    = 1,
-        Aborted   = 2,
+        Aborted = 1,
+        Failed = 2,
+        CannotFindService = 3,
     };
 
     public abstract class BaseObject : IDisposable
     {
         private string _name = string.Empty;
-        private string Name
+        public string Name
         {
             get { return _name; }
         }
@@ -149,6 +149,7 @@ namespace STools.CommonLibrary
         public abstract bool DefineServices();
         public abstract bool DefineChannels();
         public abstract bool DefineAlarms();
+        public abstract bool InitializeObject();
         public abstract bool ThreadStarter();
         public bool RunService(string name, params object[] param)
         {

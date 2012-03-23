@@ -10,24 +10,35 @@ namespace SampleObject
     {
         public override bool CreateObject()
         {
-            return false;
+            return true;
         }
 
         public override bool DefineServices()
         {
-            return false;
+            AddServices("ServiceFuncation");
+            return true;
         }
         public override bool DefineChannels()
         {
-            return false;
+            return true;
         }
         public override bool DefineAlarms()
         {
-            return false;
+            return true;
+        }
+        public override bool InitializeObject()
+        {
+            return true;
         }
         public override bool ThreadStarter()
         {
-            return false;
+            return true;
+        }
+
+
+        public bool ServiceFuncation()
+        {
+            return true;
         }
 
     }

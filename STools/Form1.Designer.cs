@@ -60,7 +60,7 @@
             // 
             this.lbMessage.Location = new System.Drawing.Point(15, 56);
             this.lbMessage.Name = "lbMessage";
-            this.lbMessage.Size = new System.Drawing.Size(503, 70);
+            this.lbMessage.Size = new System.Drawing.Size(503, 36);
             this.lbMessage.TabIndex = 2;
             this.lbMessage.Text = "label2";
             // 
@@ -78,7 +78,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 18F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(530, 135);
+            this.ClientSize = new System.Drawing.Size(534, 245);
             this.Controls.Add(this.button1);
             this.Controls.Add(this.lbMessage);
             this.Controls.Add(this.loadProgress);
