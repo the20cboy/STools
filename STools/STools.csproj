@@ -90,7 +90,6 @@
     <ProjectReference Include="..\SToolCommonLibrary\SToolCommonLibrary.csproj">
       <Project>{3E553336-0C8E-4A83-ADBD-A42D83651A8D}</Project>
       <Name>SToolCommonLibrary</Name>
-      <Private>True</Private>
     </ProjectReference>
     <ProjectReference Include="..\SToolCore\SToolCore.csproj">
       <Project>{48D71C71-79C7-4357-9EB1-5F0BF6E48396}</Project>

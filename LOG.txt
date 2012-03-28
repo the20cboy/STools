@@ -1,0 +1,83 @@
+commit b9d801afcc15aee63259dea20b2ed6b993a2b003
+Author: MinSub Jung <MinSub.Jung@me.com>
+Date:   Fri Mar 23 16:44:51 2012 +0900
+
+    Add SToolCore/Properties/AssemblyInfo.cs
+
+commit 6aa79aae1911e18d6003699f309021fdca0584d9
+Author: MinSub Jung <MinSub.Jung@me.com>
+Date:   Fri Mar 23 16:43:27 2012 +0900
+
+    Some Changed AssemplyInfo Problem.
+
+commit 5094c734a097fff11586a766e9a716279daf64aa
+Author: MinSub Jung <MinSub.Jung@me.com>
+Date:   Fri Mar 23 15:42:48 2012 +0900
+
+    Add STools Project Properties.
+
+commit 956bfd01c42e11b422a265d8e8b2c41dd78fb79f
+Author: MinSub Jung <MinSub.Jung@me.com>
+Date:   Fri Mar 23 15:41:14 2012 +0900
+
+    Add RemoteControl Class to SToolCommonLibrary.
+
+commit f28d58498a427aee275f83c1027de049c1972d60
+Merge: b2a2420 2a15318
+Author: MinSub Jung <MinSub.Jung@me.com>
+Date:   Fri Mar 23 15:39:09 2012 +0900
+
+    Merge branch 'master' of github.com:the20cboy/STools
+
+commit b2a24207162f5f2a07b4469be70692a0f4d3a3e4
+Author: MinSub Jung <MinSub.Jung@me.com>
+Date:   Fri Mar 23 15:34:43 2012 +0900
+
+    Implement .Net Remote Server & Client Sample.
+
+commit 2a15318d101acac3698cfa31073c07e551aa0680
+Author: MinSub Jung <MinSub.Jung@me.com>
+Date:   Wed Mar 21 20:13:06 2012 +0900
+
+    Remove Properties
+
+commit 280212110958b46b917d248ead8dec95c835dc14
+Author: MinSub Jung <MinSub.Jung@me.com>
+Date:   Wed Mar 21 19:47:57 2012 +0900
+
+    README Update
+
+commit 014e1ec45d4453903f8d3ccb2cbd0a6a757c9dc4
+Author: MinSub Jung <MinSub.Jung@me.com>
+Date:   Wed Mar 21 12:29:51 2012 +0900
+
+    Create Sample Application Object.
+
+commit d79b250444f130322abd5c4f69297529a48bb374
+Author: MinSub Jung <MinSub.Jung@me.com>
+Date:   Wed Mar 21 11:04:38 2012 +0900
+
+    Create S-Tool Commmon Library
+
+commit d29ff9552a034a5a8b638660c13bbe8189e2a90c
+Author: MinSub Jung <MinSub.Jung@me.com>
+Date:   Wed Mar 21 10:34:21 2012 +0900
+
+    S-Tools Core Created.
+    
+    Signed-off-by: MinSub Jung <MinSub.Jung@me.com>
+
+commit 3fe8a62d6a365da5830d344986c19bfc908046ef
+Author: MinSub Jung <MinSub.Jung@me.com>
+Date:   Wed Mar 21 10:02:48 2012 +0900
+
+    S-Tools Committed.
+    is Form Designer
+    
+    MinSub Jung <MinSub.Jung@me.com>
+
+commit f7567faa26b69902a5cec03bb3112a464dcf3bdb
+Author: MinSub Jung <MinSub.Jung@me.com>
+Date:   Wed Mar 21 09:57:28 2012 +0900
+
+    Create S-Tools Project

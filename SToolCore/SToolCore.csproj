@@ -54,7 +54,7 @@
     <Compile Include="DataAccessor.cs" />
     <Compile Include="ObjectManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="STool.cs" />
+    <Compile Include="SToolCore.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\SToolCommonLibrary\SToolCommonLibrary.csproj">

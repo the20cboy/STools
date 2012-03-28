@@ -11,6 +11,7 @@ using log4net;
 
 using STools.Core;
 using STools.CommonLibrary;
+using SToolCommonLibrary;
 
 namespace STools
 {
@@ -30,6 +31,9 @@ namespace STools
                 settings.ToolTypes = ToolTypes.Server;
             else
                 settings.ToolTypes = ToolTypes.Client;
+
+            settings.Name = System.Configuration.ConfigurationSettings.AppSettings["ApplicationType"];
+
 
             settings.Logger = _logger;
 
