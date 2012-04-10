@@ -49,7 +49,6 @@
     <Compile Include="Alarms.cs" />
     <Compile Include="BaseObject.cs" />
     <Compile Include="ChannelControl.cs" />
-    <Compile Include="RemoteControl.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="StaticLibrary.cs" />
   </ItemGroup>

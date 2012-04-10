@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using STools.CommonLibrary;
+using System.Windows;
 
 namespace SampleObject
 {
@@ -15,11 +16,13 @@ namespace SampleObject
 
         public override bool DefineServices()
         {
-            AddServices("ServiceFuncation");
+            AddServices("ServiceFunction");
             return true;
         }
         public override bool DefineChannels()
         {
+            AddChannels(new Channel<double>("doubleChannel", 0));
+            AddChannels(new Channel<string>("stringChannel", "sss"));
             return true;
         }
         public override bool DefineAlarms()
@@ -36,8 +39,9 @@ namespace SampleObject
         }
 
 
-        public bool ServiceFuncation()
+        public bool ServiceFunction()
         {
+            System.Windows.Forms.MessageBox.Show("Service Function Run");
             return true;
         }
 

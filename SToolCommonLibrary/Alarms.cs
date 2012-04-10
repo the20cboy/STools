@@ -12,9 +12,17 @@ namespace STools.CommonLibrary
         Error    = 3,
     }
 
+    public enum AlarmState
+    {
+        Set,
+        Cleared,
+    }
+
     public class Alarm
     {
         private int _id = 0;
+        private AlarmState _state = AlarmState.Cleared;
+
         public int Id
         {
             get { return _id; }

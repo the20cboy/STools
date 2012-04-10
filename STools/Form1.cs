@@ -22,7 +22,6 @@ namespace STools
 
         public Form1()
         {
-            
 
             SToolSettings settings = new SToolSettings();
             settings.StartupPath = Application.StartupPath;
@@ -43,21 +42,11 @@ namespace STools
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            /// STool Initialize
-            loadProgress.Style = ProgressBarStyle.Continuous;
-            lbMessage.Text = "S-Tool Started.";
 
-            lbMessage.Text = "Initialize S-Tools";
             if (!_sTools.Initialize())
             {
                 /// Initialize Failed.
                 MessageBox.Show("S-Tools Initialize Failed\nPlease Check System Log Files.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                this.Close();
-            }
-
-            if (!_sTools.Load()) 
-            {
-                MessageBox.Show("S-Tools Load Application Object Failed\nExit Program.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 this.Close();
             }
         }

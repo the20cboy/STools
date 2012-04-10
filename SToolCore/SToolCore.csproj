@@ -52,8 +52,9 @@
   <ItemGroup>
     <Compile Include="AlarmManager.cs" />
     <Compile Include="DataAccessor.cs" />
-    <Compile Include="ObjectManager.cs" />
+    <Compile Include="RemoteClientControl.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RemoteServerControl.cs" />
     <Compile Include="SToolCore.cs" />
   </ItemGroup>
   <ItemGroup>
