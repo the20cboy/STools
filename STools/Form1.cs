@@ -33,7 +33,7 @@ namespace STools
 
             settings.Name = System.Configuration.ConfigurationSettings.AppSettings["ApplicationType"];
 
-
+            int aaaaaaaaaaa;
             settings.Logger = _logger;
 
             _sTools = new STool(settings);
